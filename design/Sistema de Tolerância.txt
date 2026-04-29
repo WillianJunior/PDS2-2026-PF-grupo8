@@ -1,0 +1,54 @@
+Sistema de Tolerância à Falhas em Fábricas
+
+descrição: como usuário eu quero ter acesso aos dados da máquina em tempo real
+
+Critérios de aceitação:
+exibição de dados utilizando tabela de cores por nível de urgencia
+mostrar o numero de rpm a cada instante
+mostrar a temperatura da máquina
+--------------------------------------------------------------------------------------------------------------
+Sistema de Tolerância à Falhas em Fábricas
+
+descrição: como usuário eu quero criar e remover máquinas do meu sistema
+
+Critérios de aceitação:
+quero adicionar máquinas com as especificações padrão de rpm e temperatura
+quero remover máquinas quebradas ou que estão para quebrar
+quero exibir a contagem das máquinas ativas no meu sistema
+--------------------------------------------------------------------------------------------------------------
+Sistema de Tolerância à Falhas em Fábricas
+
+descrição: como usuário quero ter acesso a relatórios de desempenho no fim de cada sessão
+
+Critérios de aceitação:
+quero que os dados como temperatura máxima e mínima sejam registrados
+quero que os dados de rpm máx e mín sejam registrados
+quero o registro informe sobre quedas de desempenho que não sejam ligadas à temperatura ou baixo rpm
+--------------------------------------------------------------------------------------------------------------
+Sistema de Tolerância à Falhas em Fábricas
+
+descrição: como usuário quero acionar protocolo de "marcha" para atuar em períodos de queda de energia
+
+Critérios de aceitação:
+quero acionar o protocolo assim que a energia caia repentinamente
+quero que o protocolo iguale o rpm e o desempenho de todas as máquinas
+quero ativar o modo normal assim que a energia retornar
+---------------------------------------------------------------------------------------------------------------
+Sistema de Tolerância à Falhas em Fábricas
+
+descrição: como usuário quero ter acesso aos dados do operador de cada máquina
+
+Critérios de aceitação:
+quero que cada máquina seja registrada de acordo com o operador designado a ela
+quero poder mudar o operador caso seja necessário
+quero adicionar operadores sem necessariamente registrá-los a uma máquina específica
+----------------------------------------------------------------------------------------------------------------
+Sistema de Tolerância à Falhas em Fábricas
+
+descrição: como usuário quero iniciar e finalizar cada seção
+
+Critérios de aceitação:
+quero iniciar a sessão em um comando único para todas as máquinas
+máquinas quebradas não devem inicializar
+contagem de 60s antes de todas as máquinas desligarem
+
