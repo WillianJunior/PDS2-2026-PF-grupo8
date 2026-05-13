@@ -1,0 +1,5 @@
+ - Doxygen basicamente inexistente.
+ - A maior parte da documentação é obvia. Em SistemaMonitor::adicionarMaquinas(): "adiciona maquinas à rotina". Faz sentido, está no nome do método. 
+ - Outras partes são ambíguas. Em Maquina::manterStatus(): "opera o status da maquina". O que isso quer dizer? Operar pode significar mudança de estado, sendo a explicação de um método de manter o status.
+ - Em alguns locais, não foram criados os contratos/interfaces. Em Relatório::registraTempMaxMin() vocês não recebem nenhum argumento.
+ - O README está ok, mas tenho a impressão que o projeto está bem atrasado.
