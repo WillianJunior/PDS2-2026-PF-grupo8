@@ -40,6 +40,9 @@ public:
      * @brief documenta alertas ativos
      */
     void registrarHistóricos(Sensor *s);
+
+    const vector<string>& getAtivos() const;
+    const vector<string>& getResolvidos() const;
 };
 
 #endif

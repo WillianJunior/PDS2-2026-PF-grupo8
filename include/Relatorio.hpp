@@ -15,8 +15,6 @@ using std::fstream;
  */
 class Relatorio{
 
-private:
-    vector<Maquina*> machine;
 
 public:
     Relatorio();
@@ -24,19 +22,19 @@ public:
     /**
      * @brief registra temperatura maxima e minima do dia
      */
-    void registraTempMaxMin();
+    void registraTempMaxMin(const Maquina *m);
     /**
      * @brief registra RPM maximo e minimo do dia
      */
-    void registraRpmMaxMin();
+    void registraRpmMaxMin(const Maquina *m);
     /**
      * @brief registra anomalias comportamentais, aquecimento, oscilação anormal no RPM e desligamentos
      */
-    void registraAnomalia();
+    void registraAnomalia(const Maquina* m);
     /**
      * @brief gera resumo do dia
      */
-    void gerarResumo();
+    void gerarResumo(const vector<Maquina*>& maquinas);
     
 
 };

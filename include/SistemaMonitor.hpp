@@ -23,15 +23,15 @@ public:
     /**
      * @brief adiciona maquinas à rotina
      */
-    void adicionarMaquinas();
+    void adicionarMaquinas(Maquina* maquina);
     /**
      * @brief remove maquinas à rotina
      */
-    void removerMaquinas();
+    void removerMaquinas(string id);
     /**
      * @brief cadastra operador instanciado
      */
-    void cadastrarOperador();
+    void cadastrarOperador(Operador* op);
     /**
      * @brief atribui maquina a um operador especifico
      */
@@ -47,7 +47,9 @@ public:
     /**
      * @brief exibe os dados de todas as maquinas em tempo real
      */
-    void exibirDados();
+    void exibirDados() const;
+
+    const vector<Maquina*>& getMaquinas() const;
 
 };
 

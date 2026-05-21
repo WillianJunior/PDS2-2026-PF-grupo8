@@ -28,26 +28,26 @@ public:
     /**
      * @brief guarda o valor maximo registrado
      */
-    void guardarMax();
+    double calcularMaxRegistrado() const;
     /**
      * @brief guarda o valor minimo registrado
      */
-    void guardarMin();
+    double calcularMinRegistrado() const;
     /**
      * @brief conferir valor do sensor em determinado momento
      * @return retorna o valor do sensor no momento da chamada
      */
-    double retornaAtual();
+    double retornaAtual() const;
     /**
      * @brief registra a leitura atual no histórico
      * 
      */
-    void registraHist();
+    void registraHist(double valorLido);
 /**
  * @brief Verifica se o sensor está em estado de alerta.
  * @return true se o valor atual ultrapassar os limites, false caso contrário.
  */
-    bool alerta();
+    bool alerta() const;
 
 
 };

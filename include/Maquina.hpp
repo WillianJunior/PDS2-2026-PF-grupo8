@@ -19,18 +19,19 @@ class Maquina{
 private:
     string id;
     Sensor *s[2];
-    enum Status {ATIVA, QUEBRADA, MARCHA, DESLIGADA};
-    Status status;
+    
     Operador *op;
 
 public:
-
-    Maquina(string id, Sensor *s, Sensor*v);
+   
+    enum Status {ATIVA, QUEBRADA, MARCHA, DESLIGADA};
+    Status status;
+    Maquina(string id, Sensor *temperatura, Sensor*velocidade);
     ~Maquina();
     /**
      * @brief opera o status da maquina
      */
-    void manterStatus();
+    void atualizarEstado();
     /**
      * @brief liga/desliga a maquina
      */
@@ -52,5 +53,7 @@ public:
      * @brief simula os valores do sensor
      */
     void simulVar();
+
+    Status getStatus() const;
 };
 #endif

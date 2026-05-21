@@ -14,8 +14,6 @@
  */
 class Sessao{
 
-private:
-    vector<Maquina*> machine;
 
 public:
     Sessao();
@@ -23,7 +21,7 @@ public:
     /**
      * @brief inicializa todas as maquinas
      */
-    void inicializarMaquinas();
+    void inicializarMaquinas(vector<Maquina*>& maquinas);
     /**
      * @brief gera relatorio geral da sessão
      */
@@ -31,7 +29,7 @@ public:
     /**
      * @brief contagem das maquinas em funcionamento
      */
-    void contarMaquinas();
+    void contarMaquinasAtivas(const vector<Maquina*>& maquinas) const;
 
 };
 

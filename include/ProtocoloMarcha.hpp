@@ -13,8 +13,6 @@
  */
 class ProtocoloMarcha{
 
-private: 
-    vector<Maquina*> machine;
 
 public:
 
@@ -23,15 +21,15 @@ public:
     /**
      * @brief informa queda de energia
      */
-    void quedaEnergia();
+    void quedaEnergia(const vector<Maquina*>& maquinas);
     /**
      * @brief equaliza o RPM de todas as maquinas para operar no modo queda de energia
      */
-    void equalizarRPM();
+    void equalizarRPM(const vector<Maquina*>& maquinas);
     /**
      * @brief ativa modo normal
      */
-    void modoNormal();
+    void modoNormal(const vector<Maquina*>& maquinas);
 };
 
 
