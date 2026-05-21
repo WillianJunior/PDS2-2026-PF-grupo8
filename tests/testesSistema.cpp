@@ -71,23 +71,22 @@ TEST_CASE("Testes de Unidade - Classes de Servico (Interface e Contratos)") {
     Sensor v("S_V2", "Velocidade", 2000.0, 200.0);
     Maquina torno("TOR_01", &t, &v);
     
-    vector<Maquina*> parqueMaquinas;
+    std::vector<Maquina*> parqueMaquinas;
     parqueMaquinas.push_back(&torno);
 
     SUBCASE("Validacao do modulo de Relatorios") {
         Relatorio rel;
-        // Verifica se os metodos aceitam a passagem por referencia/ponteiro corretamente
-        rel.registraTempMaxMin(&torno);
-        rel.registraRpmMaxMin(&torno);
-        rel.gerarResumo(parqueMaquinas);
-        CHECK_NOTHROW("Metodos de relatorio executados sem quebras de contrato.");
+        // O CHECK_NOTHROW agora encapsula as operacoes de verdade para ver se elas nao travam
+        CHECK_NOTHROW(rel.registraTempMaxMin(&torno));
+        CHECK_NOTHROW(rel.registraRpmMaxMin(&torno));
+        CHECK_NOTHROW(rel.gerarResumo(parqueMaquinas));
     }
 
     SUBCASE("Validacao do modulo de Protocolos de Marcha") {
         ProtocoloMarcha prot;
-        prot.quedaEnergia(parqueMaquinas);
-        prot.equalizarRPM(parqueMaquinas);
-        CHECK_NOTHROW("Metodos de protocolo de contingencia validados.");
+        CHECK_NOTHROW(prot.quedaEnergia(parqueMaquinas));
+        CHECK_NOTHROW(prot.equalizarRPM(parqueMaquinas));
+        CHECK_NOTHROW(prot.modoNormal(parqueMaquinas));
     }
 }
 
@@ -104,8 +103,7 @@ TEST_CASE("Testes de Unidade - Gerenciamento Superior") {
 
     SUBCASE("Fluxo de controle de Sessao de Turno") {
         Sessao turno;
-        vector<Maquina*> listaMonitorada = monitor.getMaquinas();
-        turno.inicializarMaquinas(listaMonitorada);
-        CHECK_NOTHROW("Turno operacional inicializado.");
+        std::vector<Maquina*> listaMonitorada = monitor.getMaquinas();
+        CHECK_NOTHROW(turno.inicializarMaquinas(listaMonitorada));
     }
 }
