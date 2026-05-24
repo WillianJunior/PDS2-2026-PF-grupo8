@@ -1,0 +1,3 @@
+ - quantidade pífia de testes (2 casos com 7 asserções). isso vai resultar em mais trabalho a ser feto nas próximas 2 entregas...
+ - o makefile está bom (compila apenas o que não estava pronto, sem retrabalho), porém o target all deveria ser para criar o binário da aplicação, não rodar os testes.
+ - 60% de coverage, como pedido.
