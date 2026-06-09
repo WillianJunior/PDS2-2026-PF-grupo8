@@ -21,7 +21,7 @@ public:
     /**
      * @brief inicializa todas as maquinas
      */
-    void inicializarMaquinas(vector<Maquina*>& maquinas);
+    void inicializarMaquinas(std::vector<Maquina*>& maquinas);
     /**
      * @brief gera relatorio geral da sessão
      */
@@ -29,7 +29,7 @@ public:
     /**
      * @brief contagem das maquinas em funcionamento
      */
-    void contarMaquinasAtivas(const vector<Maquina*>& maquinas) const;
+    void contarMaquinasAtivas(const std::vector<Maquina*>& maquinas) const;
 
 };
 

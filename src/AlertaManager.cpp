@@ -19,19 +19,21 @@ void AlertaManager::receberAlertas(Sensor *s) {
 };
 
 string AlertaManager::classificarSeveridade(Sensor *s) {
-    
-    if(((s->getLimMin() - s->retornaAtual()) / s->getLimMin() <= 0.2) 
-    || ((s->retornaAtual() - s->getLimMax()) / s->getLimMax() <=0.2)){
-        return s->getId() + " LEVE";
+    double excesso = 0.0;
 
-    } else if(((s->getLimMin() - s->retornaAtual()) / s->getLimMin() >= 0.2)
-    || (( s->retornaAtual()- s->getLimMax()) / s->getLimMax() >= 0.2)){
-
+    if (s->retornaAtual() > s->getLimMax()){
+        excesso = (s->retornaAtual() - s->getLimMax()) / s->getLimMax();
+    }
+    else if (s->retornaAtual() < s->getLimMin()){
+        excesso = (s->getLimMin() - s->retornaAtual()) / s->getLimMin();
+    }
+    if (excesso > 0.2){
         return s->getId() + " CRITICO";
-    } else 
-        return s->getId() + " NADA CONSTA";
-};
-
+    }
+    else 
+        return s->getId() + " LEVE";
+        
+}
 void AlertaManager::manterFilas(Sensor *s) {
 
     for (auto it = ativos.begin(); it != ativos.end(); ++it) {

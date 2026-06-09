@@ -4,10 +4,10 @@
 using std::string;
 using std::vector;
 
-Sensor::Sensor(string id, string tipo) {
+Sensor::Sensor(string id, string tipo) : id(id), tipo(tipo), atual(0.0) {
     if (tipo == "temperatura") { limMax = 45; limMin = 30; }
     else if (tipo == "rpm") { limMax = 15000; limMin = 10; }
-}
+};
 
 double Sensor::calcularMaxRegistrado() const {
     if (historico.empty())  {

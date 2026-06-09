@@ -1,5 +1,6 @@
 #include "../include/Sessao.hpp"
 
+using std::vector;
 Sessao::Sessao() {}
 Sessao::~Sessao() {}
 

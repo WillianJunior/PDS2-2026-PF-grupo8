@@ -16,16 +16,15 @@ using std::string;
  */
 class Maquina{
 
+public:
+    enum Status {ATIVA, QUEBRADA, MARCHA, DESLIGADA};
 private:
     string id;
     Sensor *s[2];
-    enum Status {ATIVA, QUEBRADA, MARCHA, DESLIGADA};
     Status status;
     Operador *op;
 
-public:
-   
-    
+public:  
     Maquina(string id, Sensor *temperatura, Sensor*velocidade);
     ~Maquina();
     /**

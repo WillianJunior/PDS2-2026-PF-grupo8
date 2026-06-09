@@ -15,8 +15,8 @@
 class SistemaMonitor{
 
 private:
-    vector<Maquina*> machine;
-    vector<Operador*> op;
+    std::vector<Maquina*> machine;
+    std::vector<Operador*> op;
 public:
     SistemaMonitor();
     ~SistemaMonitor();
@@ -49,7 +49,7 @@ public:
      */
     void exibirDados() const;
 
-    const vector<Maquina*>& getMaquinas() const;
+    const std::vector<Maquina*>& getMaquinas() const;
 
 };
 

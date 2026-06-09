@@ -1,5 +1,6 @@
 #include "../include/Relatorio.hpp"
 
+using std::vector;
 Relatorio::Relatorio() {}
 Relatorio::~Relatorio() {}
 

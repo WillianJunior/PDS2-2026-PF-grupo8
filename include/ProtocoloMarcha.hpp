@@ -21,15 +21,15 @@ public:
     /**
      * @brief informa queda de energia
      */
-    void quedaEnergia(const vector<Maquina*>& maquinas);
+    void quedaEnergia(const std::vector<Maquina*>& maquinas);
     /**
      * @brief equaliza o RPM de todas as maquinas para operar no modo queda de energia
      */
-    void equalizarRPM(const vector<Maquina*>& maquinas);
+    void equalizarRPM(const std::vector<Maquina*>& maquinas);
     /**
      * @brief ativa modo normal
      */
-    void modoNormal(const vector<Maquina*>& maquinas);
+    void modoNormal(const std::vector<Maquina*>& maquinas);
 };
 
 

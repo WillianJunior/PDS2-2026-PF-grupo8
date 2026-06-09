@@ -1,4 +1,4 @@
-#include "../include/SistemaMonitor.hpp";
+#include "../include/SistemaMonitor.hpp"
 
 using std::string;
 using std::vector;
@@ -9,12 +9,12 @@ SistemaMonitor::SistemaMonitor() {
 
 SistemaMonitor::~SistemaMonitor() {
     // Deleta os ponteiros para nao dar leak de memoria
-    for (size_t i = 0; i < this->machine.size(); i++) {
+   /* for (size_t i = 0; i < this->machine.size(); i++) {
         delete this->machine[i];
     }
     for (size_t i = 0; i < this->op.size(); i++) {
         delete this->op[i];
-    }
+    }*/
 };
 
 void SistemaMonitor::adicionarMaquinas(Maquina* maquina) {

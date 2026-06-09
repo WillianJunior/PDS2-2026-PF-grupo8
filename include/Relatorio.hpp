@@ -34,7 +34,7 @@ public:
     /**
      * @brief gera resumo do dia
      */
-    void gerarResumo(const vector<Maquina*>& maquinas);
+    void gerarResumo(const std::vector<Maquina*>& maquinas);
     
 
 };

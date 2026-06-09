@@ -9,7 +9,7 @@
 #include "../include/SistemaMonitor.hpp"
 
 TEST_CASE("Testes de Unidade - Classe Sensor") {
-    Sensor termoMotor("S_TEMP_01", "Temperatura", 85.0, 15.0);
+    Sensor termoMotor("S_TEMP_01", "temperatura");
 
     SUBCASE("Validacao do registro e leitura corrente") {
         termoMotor.registraHist(28.4);
@@ -38,23 +38,25 @@ TEST_CASE("Testes de Unidade - Classe Sensor") {
 
 TEST_CASE("Testes de Unidade - Classe AlertaManager") {
     AlertaManager manager;
-    Sensor sensorRpm("S_RPM_01", "Giro", 4500.0, 500.0);
+    Sensor sensorRpm("S_RPM_01", "rpm");
 
     SUBCASE("Classificacao de severidade do alerta") {
-        sensorRpm.registraHist(5200.0);
-        CHECK(manager.classificarSeveridade(&sensorRpm) == "CRÍTICO");
-    }
+    sensorRpm.registraHist(18001.0);
+    std::string resultado = manager.classificarSeveridade(&sensorRpm);
+    std::cout << "[" << resultado << "]" << std::endl;
+    CHECK(resultado == "S_RPM_01 CRITICO");
+}
 
     SUBCASE("Fluxo de insercao de alertas ativos na fila") {
-        sensorRpm.registraHist(5500.0);
+        sensorRpm.registraHist(19000.0);
         manager.receberAlertas(&sensorRpm);
         CHECK(manager.getAtivos().size() == 1);
     }
 }
 
 TEST_CASE("Testes de Unidade - Classe Maquina") {
-    Sensor t("S_T", "Temperatura", 90.0, 10.0);
-    Sensor v("S_V", "Velocidade", 3000.0, 100.0);
+    Sensor t("S_T", "temperatura");
+    Sensor v("S_V", "rpm");
     Maquina prensa("P_IND_01", &t, &v);
 
     SUBCASE("Estado inicial padrao da maquina") {
@@ -67,8 +69,8 @@ TEST_CASE("Testes de Unidade - Classe Maquina") {
 }
 
 TEST_CASE("Testes de Unidade - Classes de Servico (Interface e Contratos)") {
-    Sensor t("S_T2", "Temperatura", 80.0, 20.0);
-    Sensor v("S_V2", "Velocidade", 2000.0, 200.0);
+    Sensor t("S_T2", "temperatura");
+    Sensor v("S_V2", "rpm");
     Maquina torno("TOR_01", &t, &v);
     
     std::vector<Maquina*> parqueMaquinas;
@@ -92,8 +94,8 @@ TEST_CASE("Testes de Unidade - Classes de Servico (Interface e Contratos)") {
 
 TEST_CASE("Testes de Unidade - Gerenciamento Superior") {
     SistemaMonitor monitor;
-    Sensor t("S_T3", "Temperatura", 100.0, 0.0);
-    Sensor v("S_V3", "Velocidade", 1500.0, 0.0);
+    Sensor t("S_T3", "temperatura");
+    Sensor v("S_V3", "rpm");
     Maquina esteira("EST_01", &t, &v);
 
     SUBCASE("Inclusao e monitoramento de repositório central") {
@@ -105,5 +107,112 @@ TEST_CASE("Testes de Unidade - Gerenciamento Superior") {
         Sessao turno;
         std::vector<Maquina*> listaMonitorada = monitor.getMaquinas();
         CHECK_NOTHROW(turno.inicializarMaquinas(listaMonitorada));
+    }
+
+    
+}
+
+TEST_CASE("Testes de Unidade - Classe Operador") {
+    Sensor t("S_T", "temperatura");
+    Sensor v("S_V", "rpm");
+    Maquina m("M_01", &t, &v);
+    Operador op("João", "manhã");
+
+    SUBCASE("Getter de nome") {
+        CHECK(op.getNome() == "João");
+    }
+
+    SUBCASE("Alocacao de maquina") {
+        op.alocarMaquina(&m);
+        // sem crash = ok
+        CHECK_NOTHROW(op.alocarMaquina(&m));
+    }
+
+    SUBCASE("Desatribuicao de maquina") {
+        op.alocarMaquina(&m);
+        CHECK_NOTHROW(op.desatribuirMaquina(&m));
+    }
+}
+
+TEST_CASE("Testes adicionais - Classe Sensor") {
+    Sensor s("S_01", "temperatura");
+
+    SUBCASE("Historico vazio inicialmente") {
+        CHECK(s.getHistoricoVazio() == true);
+    }
+
+    SUBCASE("Historico nao vazio apos registro") {
+        s.registraHist(35.0);
+        CHECK(s.getHistoricoVazio() == false);
+    }
+
+    SUBCASE("Getter de id") {
+        CHECK(s.getId() == "S_01");
+    }
+
+    SUBCASE("Getter de tipo") {
+        CHECK(s.getTipo() == "temperatura");
+    }
+
+    SUBCASE("Excecao ao calcular max com historico vazio") {
+        CHECK_THROWS(s.calcularMaxRegistrado());
+    }
+
+    SUBCASE("Excecao ao calcular min com historico vazio") {
+        CHECK_THROWS(s.calcularMinRegistrado());
+    }
+
+    SUBCASE("Excecao ao chamar alerta com historico vazio") {
+        CHECK_THROWS(s.alerta());
+    }
+}
+
+TEST_CASE("Testes adicionais - Classe AlertaManager") {
+    AlertaManager manager;
+    Sensor s("S_01", "temperatura");
+
+    SUBCASE("Severidade LEVE") {
+        s.registraHist(46.0); // pouco acima do limMax 45
+        CHECK(manager.classificarSeveridade(&s) == "S_01 LEVE");
+    }
+
+    SUBCASE("manterFilas move alerta resolvido") {
+        s.registraHist(50.0); // em alerta
+        manager.receberAlertas(&s);
+        CHECK(manager.getAtivos().size() == 1);
+        s.registraHist(35.0); // resolvido
+        manager.manterFilas(&s);
+        CHECK(manager.getResolvidos().size() == 1);
+        CHECK(manager.getAtivos().size() == 0);
+    }
+}
+
+TEST_CASE("Testes adicionais - Classe Maquina") {
+    Sensor t("S_T", "temperatura");
+    Sensor v("S_V", "rpm");
+    Maquina m("M_01", &t, &v);
+
+    SUBCASE("ligarDesligar liga a maquina") {
+        m.ligarDesligar(true);
+        CHECK(m.getStatus() == Maquina::ATIVA);
+    }
+
+    SUBCASE("ligarDesligar desliga a maquina") {
+        m.ligarDesligar(true);
+        m.ligarDesligar(false);
+        CHECK(m.getStatus() == Maquina::DESLIGADA);
+    }
+
+    SUBCASE("modoMarcha ativa quando ATIVA") {
+        m.ligarDesligar(true);
+        CHECK(m.modoMarcha() == true);
+        CHECK(m.getStatus() == Maquina::MARCHA);
+    }
+
+    SUBCASE("atualizarEstado quebra com sensor em alerta") {
+        m.ligarDesligar(true);
+        t.registraHist(99.0); // acima do limMax 45
+        m.atualizarEstado();
+        CHECK(m.getStatus() == Maquina::QUEBRADA);
     }
 }

@@ -45,10 +45,21 @@ void Maquina::refOp(Operador *op) {
 
 void Maquina::exibir() {
 
+    string statusStr;
     std::cout<<"ID..........: "<<this->id<<std::endl;
+    if(this->op != nullptr){
     std::cout<<"OPERADOR....: "<<op->getNome()<<std::endl;
+    } else {
+        std::cout<<"OPERADOR....: sem operador!"<<std::endl;
+    }
     std::cout<<"RPM.........: "<<s[1]->retornaAtual()<<std::endl;
     std::cout<<"TEMPERATURA.: "<<s[0]->retornaAtual()<<std::endl;
+    if (status == ATIVA) statusStr = "ATIVA";
+    else if (status == QUEBRADA) statusStr = "QUEBRADA";
+    else if (status == MARCHA) statusStr = "MARCHA";
+    else statusStr = "DESLIGADA";
+
+std::cout << "STATUS......: " << statusStr << std::endl;
 
 };
 void Maquina::simulVar() {
