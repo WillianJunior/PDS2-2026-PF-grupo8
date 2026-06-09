@@ -12,7 +12,11 @@ SOURCES = $(SRC)/AlertaManager.cpp $(SRC)/Maquina.cpp $(SRC)/Operador.cpp \
 
 TEST_SRC = $(TST)/testesSistema.cpp
 
-all: test
+all: $(BIN)/sistema_monitor
+
+$(BIN)/sistema_monitor: src/main.cpp $(SOURCES)
+	@mkdir -p $(BIN)
+	$(CC) $(CFLAGS) src/main.cpp $(SOURCES) -o $(BIN)/sistema_monitor
 
 $(BIN)/testes: $(SOURCES) $(TEST_SRC)
 	@mkdir -p $(BIN)
@@ -24,3 +28,5 @@ test: $(BIN)/testes
 
 clean:
 	rm -rf $(BIN) *.gcda *.gcno
+
+.PHONY: all test clean
