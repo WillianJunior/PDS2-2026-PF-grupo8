@@ -6,7 +6,7 @@
 #include<vector>
 #include"Sensor.hpp"
 
-using std::string;
+
 
 /**
  * @file AlertaManager.hpp
@@ -16,8 +16,8 @@ using std::string;
  */
 class AlertaManager{
 private:
-    vector<string> ativos;
-    vector<string> resolvidos;
+    std::vector<std::string> ativos;
+    std::vector<std::string> resolvidos;
 
 public:
     AlertaManager();
@@ -31,7 +31,7 @@ public:
      * @param s é um sensor
      * @return indicador de severidade
      */
-    string classificarSeveridade(Sensor *s);
+    std::string classificarSeveridade(Sensor *s);
     /**
      * @brief organiza os alertas ativos
      */
@@ -41,8 +41,8 @@ public:
      */
     void registrarHistóricos(Sensor *s);
 
-    const vector<string>& getAtivos() const;
-    const vector<string>& getResolvidos() const;
+    const std::vector<std::string>& getAtivos() const;
+    const std::vector<std::string>& getResolvidos() const;
 };
 
 #endif

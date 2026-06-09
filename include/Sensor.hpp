@@ -5,8 +5,7 @@
 #include<string>
 #include<vector>
 
-using std::string;
-using std::vector;
+
 /**
  * @file Sensor.hpp
  * @brief Definição da classe Sensor para monitoriar dados da maquina.
@@ -15,15 +14,15 @@ using std::vector;
  */
 class Sensor{
 private:
-    string id;
-    string tipo;
+    std::string id;
+    std::string tipo;
     double limMax;
     double limMin;
     double atual;
-    vector<double> historico;
+    std::vector<double> historico;
 
 public:
-    Sensor(string id, string tipo, double limMax, double limMin);
+    Sensor(std::string id, std::string tipo);
     ~Sensor(){};
     /**
      * @brief guarda o valor maximo registrado
@@ -49,7 +48,13 @@ public:
  */
     bool alerta() const;
 
+    std::string getId() const;
+    std::string getTipo() const;
 
+    bool getHistoricoVazio() const;
+
+    double getLimMax() const;
+    double getLimMin() const;
 };
 
 

@@ -4,16 +4,22 @@
 using std::string;
 using std::vector;
 
-Sensor::Sensor(string id, string tipo, double limMax, double limMin)
-    : id(id), tipo(tipo), limMax(limMax), limMin(limMin), atual(0.0) {}
+Sensor::Sensor(string id, string tipo) {
+    if (tipo == "temperatura") { limMax = 45; limMin = 30; }
+    else if (tipo == "rpm") { limMax = 15000; limMin = 10; }
+}
 
 double Sensor::calcularMaxRegistrado() const {
-    if (historico.empty()) return 0.0;
+    if (historico.empty())  {
+        throw std::runtime_error("Histórico vazio");
+    };
     return *std::max_element(historico.begin(), historico.end());
 };
 
 double Sensor::calcularMinRegistrado() const {
-    if (historico.empty()) return 0.0;
+    if (historico.empty())  {
+        throw std::runtime_error("Histórico vazio");
+    };
     return *std::min_element(historico.begin(), historico.end());
 };
 
@@ -27,5 +33,34 @@ void Sensor::registraHist(double valorLido) {
 };
 
 bool Sensor::alerta() const {
+    if (historico.empty())  {
+        throw std::runtime_error("Histórico vazio");
+    };
     return this->atual > this->limMax || this->atual < this->limMin;
+};
+
+string Sensor::getId() const{
+
+    return this-> id;
+};
+
+string Sensor::getTipo() const{
+    
+    return this->tipo;
+};
+
+bool Sensor::getHistoricoVazio() const{
+
+   return historico.empty();
+
+};
+
+double Sensor::getLimMax() const{
+
+    return this->limMax;
+};
+
+double Sensor::getLimMin() const{
+
+    return this->limMin;
 };

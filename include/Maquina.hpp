@@ -19,13 +19,13 @@ class Maquina{
 private:
     string id;
     Sensor *s[2];
-    
+    enum Status {ATIVA, QUEBRADA, MARCHA, DESLIGADA};
+    Status status;
     Operador *op;
 
 public:
    
-    enum Status {ATIVA, QUEBRADA, MARCHA, DESLIGADA};
-    Status status;
+    
     Maquina(string id, Sensor *temperatura, Sensor*velocidade);
     ~Maquina();
     /**
