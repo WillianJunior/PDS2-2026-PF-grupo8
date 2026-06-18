@@ -1,36 +1,20 @@
 #ifndef SESSAO_H
 #define SESSAO_H
 
-#include<iostream>
-#include<vector>
-#include"Maquina.hpp"
-#include"Relatorio.hpp"
+#include <iostream>
+#include <vector>
+#include <memory>
+#include "Maquina.hpp"
+#include "Relatorio.hpp"
 
-/**
- * @file Sessao.hpp
- * @brief Definição da classe Sessao para inicializar o "expediente".
- * @details Este arquivo contém as propriedades e os métodos necessários para 
- * inicializar maquinas, contar maquinas ativas e emitir relatorios no fim do expediente.
- */
-class Sessao{
-
-
+class Sessao {
 public:
     Sessao();
     ~Sessao();
-    /**
-     * @brief inicializa todas as maquinas
-     */
-    void inicializarMaquinas(std::vector<Maquina*>& maquinas);
-    /**
-     * @brief gera relatorio geral da sessão
-     */
-    void relatorioSessao();
-    /**
-     * @brief contagem das maquinas em funcionamento
-     */
-    void contarMaquinasAtivas(const std::vector<Maquina*>& maquinas) const;
 
+    void inicializarMaquinas(std::vector<std::shared_ptr<Maquina>>& maquinas);
+    void relatorioSessao();
+    void contarMaquinasAtivas(const std::vector<std::shared_ptr<Maquina>>& maquinas) const;
 };
 
 #endif
