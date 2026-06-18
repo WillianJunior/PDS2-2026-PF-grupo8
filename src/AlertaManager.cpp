@@ -13,12 +13,14 @@ AlertaManager::~AlertaManager() {
 };
 
 void AlertaManager::receberAlertas(Sensor *s) {
+    if(s == nullptr){throw std::invalid_argument("SENSOR INEXISTENTE!");}
     if (s->alerta()) {
         ativos.push_back(classificarSeveridade(s));
     }
 };
 
 string AlertaManager::classificarSeveridade(Sensor *s) {
+    if(s == nullptr){throw std::invalid_argument("SENSOR INEXISTENTE!");}
     double excesso = 0.0;
 
     if (s->retornaAtual() > s->getLimMax()){
@@ -35,7 +37,7 @@ string AlertaManager::classificarSeveridade(Sensor *s) {
         
 }
 void AlertaManager::manterFilas(Sensor *s) {
-
+    if(s == nullptr){throw std::invalid_argument("SENSOR INEXISTENTE!");}
     for (auto it = ativos.begin(); it != ativos.end(); ++it) {
 
         if(!s->alerta() && it->find(s->getId()) != string::npos){
@@ -49,10 +51,11 @@ void AlertaManager::manterFilas(Sensor *s) {
 };
 
 void AlertaManager::registrarHistóricos(Sensor *s) {
-
+    if(s == nullptr){throw std::invalid_argument("SENSOR INEXISTENTE!");}
     time_t agora = time(nullptr);
     string dataHora = ctime(&agora);
     std::ofstream arquivo("historico.txt", std::ios::app);
+    if(!arquivo.is_open()){throw std::runtime_error("ERRO AO ABRIR ARQUIVO DE HISTORICO");}
     arquivo << dataHora << " | " << s->getId() << " | " << s->retornaAtual() << std::endl;
     arquivo.close();
 };

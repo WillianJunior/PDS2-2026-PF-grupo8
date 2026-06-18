@@ -6,6 +6,9 @@
 using std::string;
 
 Maquina::Maquina(string id, Sensor *temperatura, Sensor *velocidade) {
+    if(id.empty()){throw std::invalid_argument("MAQUINA SEM IDENTIFICACAO!");}
+    else if(temperatura == nullptr){throw std::invalid_argument("SENSOR DE TEMPERATURA INEXISTENTE");}
+    else if (velocidade == nullptr){throw std::invalid_argument("SENSOR DE ROTACAO INEXISTENTE");}
     this->id = id;
     this->s[0] = temperatura;
     this->s[1] = velocidade;
@@ -46,6 +49,8 @@ void Maquina::refOp(Operador *op) {
 void Maquina::exibir() {
 
     string statusStr;
+    if(s[1] == nullptr){throw std::runtime_error("ERRO SENSOR DE ROTACAO NULO");}
+    if(s[0] == nullptr){throw std::runtime_error("ERRO SENSOR DE TEMPERATURA NULO");}
     std::cout<<"ID..........: "<<this->id<<std::endl;
     if(this->op != nullptr){
     std::cout<<"OPERADOR....: "<<op->getNome()<<std::endl;
