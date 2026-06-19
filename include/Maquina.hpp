@@ -52,7 +52,9 @@ public:
      * @brief simula os valores do sensor
      */
     void simulVar();
-
+    
     Status getStatus() const;
+
+    string getId() const;
 };
 #endif

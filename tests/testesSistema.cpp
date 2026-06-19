@@ -71,16 +71,16 @@ TEST_CASE("Testes de Unidade - Classe Maquina") {
 TEST_CASE("Testes de Unidade - Classes de Servico (Interface e Contratos)") {
     Sensor t("S_T2", "temperatura");
     Sensor v("S_V2", "rpm");
-    Maquina torno("TOR_01", &t, &v);
+    auto torno = std::make_shared<Maquina>("TOR_01", &t, &v);
     
-    std::vector<Maquina*> parqueMaquinas;
-    parqueMaquinas.push_back(&torno);
+    std::vector<std::shared_ptr<Maquina>> parqueMaquinas;
+    parqueMaquinas.push_back(torno);
 
     SUBCASE("Validacao do modulo de Relatorios") {
         Relatorio rel;
         // O CHECK_NOTHROW agora encapsula as operacoes de verdade para ver se elas nao travam
-        CHECK_NOTHROW(rel.registraTempMaxMin(&torno));
-        CHECK_NOTHROW(rel.registraRpmMaxMin(&torno));
+        CHECK_NOTHROW(rel.registraTempMaxMin(torno));
+        CHECK_NOTHROW(rel.registraRpmMaxMin(torno));
         CHECK_NOTHROW(rel.gerarResumo(parqueMaquinas));
     }
 
@@ -96,16 +96,16 @@ TEST_CASE("Testes de Unidade - Gerenciamento Superior") {
     SistemaMonitor monitor;
     Sensor t("S_T3", "temperatura");
     Sensor v("S_V3", "rpm");
-    Maquina esteira("EST_01", &t, &v);
+    auto esteira = std::make_shared<Maquina>("EST_01", &t, &v);
 
     SUBCASE("Inclusao e monitoramento de repositório central") {
-        monitor.adicionarMaquinas(&esteira);
+        monitor.adicionarMaquinas(esteira);
         CHECK(monitor.getMaquinas().size() == 1);
     }
 
     SUBCASE("Fluxo de controle de Sessao de Turno") {
         Sessao turno;
-        std::vector<Maquina*> listaMonitorada = monitor.getMaquinas();
+        std::vector<std::shared_ptr<Maquina>> listaMonitorada = monitor.getMaquinas();
         CHECK_NOTHROW(turno.inicializarMaquinas(listaMonitorada));
     }
 
@@ -116,7 +116,7 @@ TEST_CASE("Testes de Unidade - Classe Operador") {
     Sensor t("S_T", "temperatura");
     Sensor v("S_V", "rpm");
     Maquina m("M_01", &t, &v);
-    Operador op("João", "manhã");
+    Operador op("João", "MANHA");
 
     SUBCASE("Getter de nome") {
         CHECK(op.getNome() == "João");

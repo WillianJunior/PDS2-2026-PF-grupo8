@@ -94,3 +94,7 @@ void Maquina::simulVar() {
 Maquina::Status Maquina::getStatus() const {
     return this->status;
 };
+
+string Maquina::getId() const{
+    return this->id;
+}

@@ -16,7 +16,7 @@ void SistemaMonitor::removerMaquinas(std::string id) {
         throw std::invalid_argument("Erro: ID fornecido para remocao esta vazio.");
     }
     for (size_t i = 0; i < this->machine.size(); i++) {
-        if (this->machine[i]->getStatus() == Maquina::QUEBRADA) {
+        if (this->machine[i]->getId() == id) {
             this->machine.erase(this->machine.begin() + i);
             break;
         }
@@ -43,21 +43,27 @@ void SistemaMonitor::atribuirMaquinasOperador() {
 }
 
 void SistemaMonitor::protocoloMarcha() {
+    
     for (size_t i = 0; i < this->machine.size(); i++) {
+        if(!this->machine[i]){throw std::runtime_error("Erro maquina nula");}
         this->machine[i]->modoMarcha();
     }
 }
 
 void SistemaMonitor::cicloMonitoramento() {
+    
     for (size_t i = 0; i < this->machine.size(); i++) {
+        if(!this->machine[i]){throw std::runtime_error("Erro maquina nula");}
         this->machine[i]->simulVar();
         this->machine[i]->atualizarEstado();
     }
 }
 
 void SistemaMonitor::exibirDados() const {
+
     std::cout << "--- Dados do Sistema ---" << std::endl;
     for (size_t i = 0; i < this->machine.size(); i++) {
+        if(!this->machine[i]){throw std::runtime_error("Erro maquina nula");}
         this->machine[i]->exibir();
     }
 }

@@ -21,7 +21,7 @@ void Sessao::relatorioSessao() {
 void Sessao::contarMaquinasAtivas(const std::vector<std::shared_ptr<Maquina>>& maquinas) const {
     int ativas = 0;
     for (size_t i = 0; i < maquinas.size(); i++) {
-        if (!maquinas[i]) continue;
+        if (!maquinas[i]) {throw std::runtime_error("Erro ao tentar contar maquina nula");};
         if (maquinas[i]->getStatus() == Maquina::ATIVA || maquinas[i]->getStatus() == Maquina::MARCHA) {
             ativas++;
         }
