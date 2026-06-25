@@ -17,6 +17,7 @@ Maquina::Maquina(string id, Sensor *temperatura, Sensor *velocidade) {
     this->status = DESLIGADA;
     this->op = nullptr;
     alertaCiclos = 0;
+    this->tempoDecorridoRPM = 60;
 };
 
 Maquina::~Maquina() {}
@@ -24,6 +25,9 @@ Maquina::~Maquina() {}
 void Maquina::atualizarEstado() {
     if(s[0]->getHistoricoVazio() || s[1]->getHistoricoVazio()) {
         
+        return;
+    }
+    if (this->status == MARCHA) { 
         return;
     }
     if((s[0] != nullptr && !s[0]->getHistoricoVazio() && s[0]->alerta()) ||(s[1] != nullptr && !s[1]->getHistoricoVazio() && s[1]->alerta())){
@@ -105,28 +109,46 @@ void Maquina::exibir() const{
 };
 void Maquina::simulVar() {
 
-    //srand(time(nullptr));
-    double minVal;
-    double maxVal;
+    if (this->status == MARCHA) {
+        s[1]->registraHist(8000); 
+               
+        double minTemp = s[0]->getLimMin() + 2;
+        double maxTemp = s[0]->getLimMax() - 2;
+        double valorTemp = minTemp + (rand() % (int)(maxTemp - minTemp));
+        s[0]->registraHist(valorTemp);
+        
+        return; 
+    }
+    
+    double minVal = 0;
+    double maxVal = 0;
 
     if(s[0]->getTipo() == "temperatura"){
-        minVal = s[0]->getLimMin() +2;
-        maxVal = s[0]->getLimMax() -2;
-    }   
+        minVal = s[0]->getLimMin() + 2;
+        maxVal = s[0]->getLimMax() - 2;
+    } else {
+        throw std::runtime_error("Erro no simulVar: s[0] nao e do tipo temperatura!");
+    }
 
     double valor = minVal + (rand() % (int)(maxVal - minVal));
     s[0]->registraHist(valor);
 
     if(s[1]->getTipo() == "rpm"){
+        this->tempoDecorridoRPM++;
 
-        minVal = s[1]->getLimMin() + 500;
-        maxVal = s[1]->getLimMax() - 500;
+        if (this->tempoDecorridoRPM >= 60) {
+            minVal = s[1]->getLimMin() + 500;
+            maxVal = s[1]->getLimMax() - 500;
+            double valor2 = minVal + (rand() % (int)(maxVal - minVal));
+            s[1]->registraHist(valor2);
+            this->tempoDecorridoRPM = 0;
+        } else {
+            s[1]->registraHist(s[1]->retornaAtual());
+        }
+    } else {
+        throw std::runtime_error("Erro no simulVar: s[1] nao e do tipo rpm!");
     }
-
-    double valor2 = minVal + (rand() % (int)(maxVal - minVal));
-    s[1]->registraHist(valor2);
-};
-
+}
 Maquina::Status Maquina::getStatus() const {
     return this->status;
 };

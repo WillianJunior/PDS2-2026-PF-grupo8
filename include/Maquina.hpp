@@ -24,6 +24,7 @@ private:
     Status status;
     Operador *op;
     int alertaCiclos;
+    int tempoDecorridoRPM;
 
 public:  
     Maquina(std::string id, Sensor *temperatura, Sensor*velocidade);
