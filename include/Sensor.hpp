@@ -55,6 +55,8 @@ public:
 
     double getLimMax() const;
     double getLimMin() const;
+
+    void sensorStop();
 };
 
 

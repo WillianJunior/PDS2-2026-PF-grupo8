@@ -5,8 +5,8 @@
 #include<string>
 #include "Sensor.hpp"
 #include"Operador.hpp"
+#include"cores.hpp"
 
-using std::string;
 
 /**
  * @file Maquina.hpp
@@ -17,15 +17,16 @@ using std::string;
 class Maquina{
 
 public:
-    enum Status {ATIVA, QUEBRADA, MARCHA, DESLIGADA};
+    enum Status {ATIVA, QUEBRADA, MARCHA, DESLIGADA, ALERTA};
 private:
-    string id;
+    std::string id;
     Sensor *s[2];
     Status status;
     Operador *op;
+    int alertaCiclos;
 
 public:  
-    Maquina(string id, Sensor *temperatura, Sensor*velocidade);
+    Maquina(std::string id, Sensor *temperatura, Sensor*velocidade);
     ~Maquina();
     /**
      * @brief opera o status da maquina
@@ -47,7 +48,7 @@ public:
     /**
      * @brief exibe a maquina
      */
-    void exibir();
+    void exibir() const;
     /**
      * @brief simula os valores do sensor
      */
@@ -55,6 +56,11 @@ public:
     
     Status getStatus() const;
 
-    string getId() const;
+    std::string getId() const;
+    Sensor* getSensorTemp() const;
+    Sensor* getSensorRpm() const;
+    Operador* getOp() const;
+    int getCiclos() const;
+    
 };
 #endif

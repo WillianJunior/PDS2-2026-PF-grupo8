@@ -48,16 +48,24 @@ void SistemaMonitor::protocoloMarcha() {
         if(!this->machine[i]){throw std::runtime_error("Erro maquina nula");}
         this->machine[i]->modoMarcha();
     }
-}
+};
 
 void SistemaMonitor::cicloMonitoramento() {
     
     for (size_t i = 0; i < this->machine.size(); i++) {
         if(!this->machine[i]){throw std::runtime_error("Erro maquina nula");}
-        this->machine[i]->simulVar();
-        this->machine[i]->atualizarEstado();
+        if(this->machine[i]->getStatus() != Maquina::DESLIGADA && this->machine[i]->getStatus() != Maquina::QUEBRADA){
+            if(this->machine[i]->getStatus() == Maquina::ALERTA && this->machine[i]->getCiclos() >= 3){
+                relatorio.registrarDesligamentoAlerta(machine[i]);
+            }
+            this->machine[i]->simulVar();
+            this->machine[i]->atualizarEstado();
+    } else if(this->machine[i]->getStatus() == Maquina::DESLIGADA || this->machine[i]->getStatus() == Maquina::QUEBRADA){
+        this->machine[i]->getSensorTemp()->sensorStop();
+        this->machine[i]->getSensorRpm()->sensorStop();
     }
-}
+    }
+};
 
 void SistemaMonitor::exibirDados() const {
 
@@ -66,8 +74,8 @@ void SistemaMonitor::exibirDados() const {
         if(!this->machine[i]){throw std::runtime_error("Erro maquina nula");}
         this->machine[i]->exibir();
     }
-}
+};
 
 const std::vector<std::shared_ptr<Maquina>>& SistemaMonitor::getMaquinas() const {
     return this->machine;
-}
+};

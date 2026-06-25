@@ -7,11 +7,12 @@
 #include <memory>
 #include "Maquina.hpp"
 #include "Operador.hpp"
-
+#include "Relatorio.hpp"
 class SistemaMonitor {
 private:
     std::vector<std::shared_ptr<Maquina>> machine;
     std::vector<std::shared_ptr<Operador>> op;
+    Relatorio relatorio;
 
 public:
     SistemaMonitor();
@@ -24,6 +25,7 @@ public:
     void protocoloMarcha();
     void cicloMonitoramento();
     void exibirDados() const;
+    
 
     const std::vector<std::shared_ptr<Maquina>>& getMaquinas() const;
 };

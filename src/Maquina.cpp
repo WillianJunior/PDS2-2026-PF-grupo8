@@ -1,7 +1,9 @@
 #include "../include/Maquina.hpp"
 #include "../include/Operador.hpp"
+#include "../include/cores.hpp"
 #include<cstdlib>
 #include<ctime>
+using namespace Cores;
 
 using std::string;
 
@@ -14,19 +16,33 @@ Maquina::Maquina(string id, Sensor *temperatura, Sensor *velocidade) {
     this->s[1] = velocidade;
     this->status = DESLIGADA;
     this->op = nullptr;
+    alertaCiclos = 0;
 };
 
 Maquina::~Maquina() {}
 
 void Maquina::atualizarEstado() {
-    
+    if(s[0]->getHistoricoVazio() || s[1]->getHistoricoVazio()) {
+        
+        return;
+    }
     if((s[0] != nullptr && !s[0]->getHistoricoVazio() && s[0]->alerta()) ||(s[1] != nullptr && !s[1]->getHistoricoVazio() && s[1]->alerta())){
         
         status = QUEBRADA;
     } else if(status == QUEBRADA) {
         
         status = DESLIGADA;  
-    }
+    } else if(s[1]->retornaAtual() > 8000 && s[1]->retornaAtual() < 13000){
+        status = ATIVA;
+        alertaCiclos = 0;
+    } else if((s[1]->retornaAtual() > 6999 && s[1]->retornaAtual() <= 8000) || (s[1]->retornaAtual() >= 13000 && s[1]->retornaAtual() <= 14000)){
+        status = ALERTA;
+        alertaCiclos++;
+        if(alertaCiclos == 3){
+            status = DESLIGADA;
+            alertaCiclos = 0;
+        }
+    } 
 };
 
 void Maquina::ligarDesligar(bool x) {
@@ -46,11 +62,14 @@ void Maquina::refOp(Operador *op) {
     this->op = op;
 };
 
-void Maquina::exibir() {
+void Maquina::exibir() const{
 
     string statusStr;
+    string corStatus;
     if(s[1] == nullptr){throw std::runtime_error("ERRO SENSOR DE ROTACAO NULO");}
+    if(s[1]->retornaAtual() < 0){throw std::runtime_error("ERRO SENSOR DE RPM NEGATIVO");}
     if(s[0] == nullptr){throw std::runtime_error("ERRO SENSOR DE TEMPERATURA NULO");}
+    std::cout << GRAY << BLACK;
     std::cout<<"ID..........: "<<this->id<<std::endl;
     if(this->op != nullptr){
     std::cout<<"OPERADOR....: "<<op->getNome()<<std::endl;
@@ -59,23 +78,40 @@ void Maquina::exibir() {
     }
     std::cout<<"RPM.........: "<<s[1]->retornaAtual()<<std::endl;
     std::cout<<"TEMPERATURA.: "<<s[0]->retornaAtual()<<std::endl;
-    if (status == ATIVA) statusStr = "ATIVA";
-    else if (status == QUEBRADA) statusStr = "QUEBRADA";
-    else if (status == MARCHA) statusStr = "MARCHA";
-    else statusStr = "DESLIGADA";
+    if (status == ATIVA) {       
+        statusStr = "ATIVA";
+        corStatus = GREEN;
+    }
+    else if (status == QUEBRADA) {
+        statusStr = "QUEBRADA";
+        corStatus = RED;
+    }
+    else if (status == ALERTA) {
+        statusStr = "ALERTA";
+        corStatus = YELLOW;
+    }
+    else if(status == MARCHA){
+        statusStr = "MARCHA";
+        corStatus = BLUE;
+    }
+    else {
+        statusStr = "DESLIGADA";
+        corStatus = BLACK;
+    } 
 
-std::cout << "STATUS......: " << statusStr << std::endl;
+
+    std::cout << "STATUS......: " << corStatus << statusStr << RESET << std::endl;;
 
 };
 void Maquina::simulVar() {
 
-    srand(time(nullptr));
+    //srand(time(nullptr));
     double minVal;
     double maxVal;
 
     if(s[0]->getTipo() == "temperatura"){
-        minVal = s[0]->getLimMin() * 0.8;
-        maxVal = s[0]->getLimMax() * 1.2;
+        minVal = s[0]->getLimMin() +2;
+        maxVal = s[0]->getLimMax() -2;
     }   
 
     double valor = minVal + (rand() % (int)(maxVal - minVal));
@@ -83,8 +119,8 @@ void Maquina::simulVar() {
 
     if(s[1]->getTipo() == "rpm"){
 
-        minVal = s[1]->getLimMin() - 2000;
-        maxVal = s[1]->getLimMax() + 5000;
+        minVal = s[1]->getLimMin() + 500;
+        maxVal = s[1]->getLimMax() - 500;
     }
 
     double valor2 = minVal + (rand() % (int)(maxVal - minVal));
@@ -95,6 +131,19 @@ Maquina::Status Maquina::getStatus() const {
     return this->status;
 };
 
+Sensor* Maquina::getSensorTemp() const{
+    return this->s[0];
+};
+
+Sensor* Maquina::getSensorRpm() const{
+    return this->s[1];
+};
+Operador* Maquina::getOp() const{
+    return this->op;
+};
 string Maquina::getId() const{
     return this->id;
+};
+int Maquina::getCiclos()const{
+    return this->alertaCiclos;
 }

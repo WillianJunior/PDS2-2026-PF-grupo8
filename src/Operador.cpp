@@ -30,7 +30,7 @@ void Operador::desatribuirMaquina(Maquina *m) {
     }
 }
 
-string Operador::getNome() const{
+std::string Operador::getNome() const{
 
     return this->nome;
 }

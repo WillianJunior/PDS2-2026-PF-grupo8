@@ -8,7 +8,7 @@ using std::vector;
 Sensor::Sensor(string id, string tipo) : id(id), tipo(tipo), atual(0.0) {
     if(id.empty()){throw std::invalid_argument("SENSOR SEM IDENTIFICACAO!");}
     if (tipo == "temperatura") { limMax = 45; limMin = 30; }
-    else if (tipo == "rpm") { limMax = 15000; limMin = 10; }
+    else if (tipo == "rpm") { limMax = 14000; limMin = 7000; }
     else {throw std::invalid_argument("TIPO DE SENSOR INVALIDO!");}
 };
 
@@ -67,3 +67,7 @@ double Sensor::getLimMin() const{
 
     return this->limMin;
 };
+
+void Sensor::sensorStop(){
+    this->atual = 0;
+}

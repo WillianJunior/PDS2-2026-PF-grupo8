@@ -59,6 +59,26 @@ TEST_CASE("Testes de Unidade - Classe Maquina") {
     Sensor v("S_V", "rpm");
     Maquina prensa("P_IND_01", &t, &v);
 
+    SUBCASE("Lancamento de Excecao ao instanciar maquina com sensores nulos") {
+        CHECK_THROWS_AS(Maquina("MAQ_FALHA", nullptr, &v), std::invalid_argument);
+        CHECK_THROWS_AS(Maquina("MAQ_FALHA", &t, nullptr), std::invalid_argument);
+        CHECK_THROWS_AS(Maquina("", &t, &v), std::invalid_argument); // ID Vazio
+    }
+    SUBCASE("Desligamento automatico apos 3 ciclos de alerta de RPM") {
+        prensa.ligarDesligar(true);
+        v.registraHist(13500.0); 
+        t.registraHist(35.0);
+        prensa.atualizarEstado(); 
+        CHECK(prensa.getStatus() == Maquina::ALERTA);
+        CHECK(prensa.getCiclos() == 1);
+
+        prensa.atualizarEstado(); 
+        CHECK(prensa.getCiclos() == 2);
+
+        prensa.atualizarEstado(); 
+        CHECK(prensa.getStatus() == Maquina::DESLIGADA);
+        CHECK(prensa.getCiclos() == 0); 
+    }
     SUBCASE("Estado inicial padrao da maquina") {
         CHECK(prensa.getStatus() == Maquina::DESLIGADA);
     }
@@ -97,7 +117,13 @@ TEST_CASE("Testes de Unidade - Gerenciamento Superior") {
     Sensor t("S_T3", "temperatura");
     Sensor v("S_V3", "rpm");
     auto esteira = std::make_shared<Maquina>("EST_01", &t, &v);
-
+    SUBCASE("Remocao de maquina por ID") {
+        monitor.adicionarMaquinas(esteira);
+        CHECK(monitor.getMaquinas().size() == 1);
+        
+        monitor.removerMaquinas("EST_01");
+        CHECK(monitor.getMaquinas().size() == 0);
+    }
     SUBCASE("Inclusao e monitoramento de repositório central") {
         monitor.adicionarMaquinas(esteira);
         CHECK(monitor.getMaquinas().size() == 1);
@@ -120,6 +146,10 @@ TEST_CASE("Testes de Unidade - Classe Operador") {
 
     SUBCASE("Getter de nome") {
         CHECK(op.getNome() == "João");
+    }
+
+    SUBCASE("Excecao ao criar operador com turno invalido") {
+        CHECK_THROWS_AS(Operador("Maria", "MADRUGADA"), std::invalid_argument);
     }
 
     SUBCASE("Alocacao de maquina") {
@@ -211,8 +241,94 @@ TEST_CASE("Testes adicionais - Classe Maquina") {
 
     SUBCASE("atualizarEstado quebra com sensor em alerta") {
         m.ligarDesligar(true);
-        t.registraHist(99.0); // acima do limMax 45
+        t.registraHist(99.0);
+        v.registraHist(10000.0);
         m.atualizarEstado();
         CHECK(m.getStatus() == Maquina::QUEBRADA);
+    }
+    
+}
+TEST_CASE("Testes de Cobertura - Forcando Excecoes e Metodos Ocultos") {
+    
+    SUBCASE("Relatorio - Disparo de Excecoes e Anomalias") {
+        Relatorio rel;
+        CHECK_THROWS_AS(rel.registraTempMaxMin(nullptr), std::invalid_argument);
+        CHECK_THROWS_AS(rel.registraRpmMaxMin(nullptr), std::invalid_argument);
+        CHECK_THROWS_AS(rel.registraAnomalia(nullptr), std::invalid_argument);
+        CHECK_THROWS_AS(rel.registrarDesligamentoAlerta(nullptr), std::invalid_argument);
+        
+        Sensor t("T_COV", "temperatura");
+        Sensor v("V_COV", "rpm");
+        auto maq = std::make_shared<Maquina>("MAQ_COV", &t, &v);
+        
+        maq->ligarDesligar(true);
+        t.registraHist(99.0); 
+        v.registraHist(10000.0);
+        maq->atualizarEstado();
+        CHECK_NOTHROW(rel.registraAnomalia(maq));
+    }
+
+    SUBCASE("AlertaManager - Historicos e Ponteiros Nulos") {
+        AlertaManager am;
+        CHECK_THROWS_AS(am.receberAlertas(nullptr), std::invalid_argument);
+        CHECK_THROWS_AS(am.classificarSeveridade(nullptr), std::invalid_argument);
+        CHECK_THROWS_AS(am.manterFilas(nullptr), std::invalid_argument);
+        CHECK_THROWS_AS(am.registrarHistóricos(nullptr), std::invalid_argument);
+
+        Sensor t("T_COV2", "temperatura");
+        t.registraHist(50.0);
+        CHECK_NOTHROW(am.registrarHistóricos(&t));
+    }
+
+    SUBCASE("Operador - Realocacao e Excecoes de Nulo") {
+        Operador op("Ana", "TARDE");
+        CHECK_THROWS_AS(op.alocarMaquina(nullptr), std::invalid_argument);
+        CHECK_THROWS_AS(op.desatribuirMaquina(nullptr), std::invalid_argument);
+        
+        Sensor t("T_COV3", "temperatura"); 
+        Sensor v("V_COV3", "rpm");
+        Maquina m("M_COV3", &t, &v);
+        Operador op2("Beto", "NOITE");
+        
+        CHECK_THROWS_AS(op.realocarMaquina(nullptr, &m), std::invalid_argument);
+        CHECK_THROWS_AS(op.realocarMaquina(&op2, nullptr), std::invalid_argument);
+        CHECK_NOTHROW(op.realocarMaquina(&op2, &m));
+    }
+
+    SUBCASE("Sessao - Rotinas de Relatorio e Salvamento") {
+        Sessao s;
+        std::vector<std::shared_ptr<Maquina>> listaVazia;
+        CHECK_NOTHROW(s.relatorioSessao());
+        CHECK_NOTHROW(s.contarMaquinasAtivas(listaVazia));
+        CHECK_NOTHROW(s.salvarSessao(listaVazia));
+    }
+
+    SUBCASE("SistemaMonitor - Validacoes e Exibicao") {
+        SistemaMonitor sm;
+        CHECK_THROWS_AS(sm.adicionarMaquinas(nullptr), std::invalid_argument);
+        CHECK_THROWS_AS(sm.removerMaquinas(""), std::invalid_argument);
+        CHECK_THROWS_AS(sm.cadastrarOperador(nullptr), std::invalid_argument);
+        
+        auto op = std::make_shared<Operador>("Carlos", "MANHA");
+        sm.cadastrarOperador(op);
+        
+        Sensor t("T_COV4", "temperatura"); 
+        Sensor v("V_COV4", "rpm");
+        auto maq = std::make_shared<Maquina>("M_COV4", &t, &v);
+        sm.adicionarMaquinas(maq);
+        
+        CHECK_NOTHROW(sm.atribuirMaquinasOperador());
+        CHECK_NOTHROW(sm.exibirDados());
+        CHECK_NOTHROW(sm.cicloMonitoramento());
+    }
+    
+    SUBCASE("ProtocoloMarcha - Abortos por Quebra de Sincronia") {
+        ProtocoloMarcha pm;
+        std::vector<std::shared_ptr<Maquina>> listaCorrompida;
+        listaCorrompida.push_back(nullptr);
+        
+        CHECK_THROWS_AS(pm.quedaEnergia(listaCorrompida), std::runtime_error);
+        CHECK_THROWS_AS(pm.equalizarRPM(listaCorrompida), std::runtime_error);
+        CHECK_THROWS_AS(pm.modoNormal(listaCorrompida), std::runtime_error);
     }
 }

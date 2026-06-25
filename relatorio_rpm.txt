@@ -1,9 +1,4 @@
-Registrando RPM da maquina.
-Registrando RPM da maquina.
-Registrando RPM da maquina.
-Registrando RPM da maquina.
-Registrando RPM da maquina.
-Registrando RPM da maquina.
-Registrando RPM da maquina.
-Registrando RPM da maquina.
-Registrando RPM da maquina.
+Máquina: TOR_01 | Sem histórico de RPM disponível.
+Máquina: TOR_01 | Sem histórico de RPM disponível.
+Máquina: TOR_01 | Sem histórico de RPM disponível.
+Máquina: TOR_01 | Sem histórico de RPM disponível.

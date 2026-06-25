@@ -16,6 +16,7 @@ public:
     void registraRpmMaxMin(std::shared_ptr<const Maquina> m);
     void registraAnomalia(std::shared_ptr<const Maquina> m);
     void gerarResumo(const std::vector<std::shared_ptr<Maquina>>& maquinas);
+    void registrarDesligamentoAlerta(std::shared_ptr<const Maquina> m);
 };
 
 #endif
